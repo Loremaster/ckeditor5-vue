@@ -1,6 +1,11 @@
 <template>
   <div class="editor">
-    <ckeditor :editor="editor" v-model="editorData" :config="editorConfig" />
+    <ckeditor
+      :editor="editor"
+      v-model="editorData"
+      :config="editorConfig"
+      @input="onEditorInput"
+    />
   </div>
 </template>
 
@@ -52,6 +57,18 @@ export default {
         }
       }
     };
+  },
+  methods: {
+    onEditorInput(text, event, editor) {
+      const root = event.source.getRoot();
+
+      editor.model.change(writer => {
+        //// const position = editor.model.document.selection.getFirstPosition()
+        writer.setSelection(root, "in");
+        editor.execute("fontFamily", { value: "Arial" });
+        writer.setSelection(null);
+      });
+    }
   }
 };
 </script>
